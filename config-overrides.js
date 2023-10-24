@@ -1,4 +1,4 @@
-const { ProvidePlugin } = require('webpack');
+const { ProvidePlugin, NormalModuleReplacementPlugin } = require('webpack');
 
 module.exports = function override(config, env) {
   Error.stackTraceLimit = 256;
@@ -34,7 +34,10 @@ module.exports = function override(config, env) {
     }),
     new ProvidePlugin({
       process: 'process/browser'
-    })
+    }),
+    new NormalModuleReplacementPlugin(/^node:/, (resource) => {
+      resource.request = resource.request.replace(/^node:/, "");
+    }),
   ];
 
   return config;
